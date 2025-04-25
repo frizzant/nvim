@@ -731,6 +731,7 @@ require("lazy").setup({
 						},
 					},
 				},
+				tailwindcss = {},
 				cssls = { -- CSS/SCSS/LESS LSP
 					settings = {
 						css = {
