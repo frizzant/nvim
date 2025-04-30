@@ -1,4 +1,8 @@
 --[[
+-- Must installs:
+--    These can sometimes be installed directly via Mason - type ":Mason"
+--    NPM: LSPs for CSS (cssls) & PHP
+--    Brew/apt: ripgrep 
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
