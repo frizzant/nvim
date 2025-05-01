@@ -3,6 +3,16 @@
 --    These can sometimes be installed directly via Mason - type ":Mason"
 --    NPM: LSPs for CSS (cssls) & PHP
 --    Brew/apt: ripgrep 
+--    Help command like `:help lspconfig-all` are very helpful for finding installation guides etc.
+--
+-- NPM PACKAGES
+--    /Users/erinmcgowan/.nvm/versions/node/v23.11.0/lib
+├── @tailwindcss/language-server@0.14.16
+├── @vue/language-server@2.2.10
+├── corepack@0.32.0
+├── emmet-ls@0.4.2
+├── npm@10.9.2
+└── vscode-langservers-extracted@4.10.0
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -249,7 +259,16 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	"hrsh7th/nvim-cmp",
+	"hrsh7th/cmp-buffer",
 	"mbbill/undotree",
+
+	{
+		"aca/emmet-ls",
+		lazy = false,
+		config = function()
+			require("lspconfig").emmet_ls.setup({})
+		end,
+	},
 
 	{
 		"rmagatti/auto-session",
