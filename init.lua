@@ -186,6 +186,11 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 vim.keymap.set("n", "<leader><F5>", vim.cmd.UndotreeToggle)
 
+-- Search for the files with differences to default branch.
+vim.keymap.set({ "n", "v" }, "<leader>gf", function()
+	require("git_branch").files()
+end)
+
 -- Open a new Terminal window below
 vim.keymap.set("n", "<Leader>T", ":below new term://bash<CR>", { noremap = true })
 
@@ -265,6 +270,7 @@ require("lazy").setup({
 		commit = "b356f2c",
 		pin = true,
 	},
+	"mrloop/telescope-git-branch.nvim",
 	"mbbill/undotree",
 
 	{
@@ -397,6 +403,9 @@ require("lazy").setup({
 				{ "<leader>a", group = "[A]uto Session" },
 				{ "<leader>c", group = "[C]ode", mode = { "n", "x" } },
 				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>g", group = "[G]it" },
+				{ "<leader>gf", group = "Git Search [F]ile Diffs (on current branch)" },
+				{ "<leader>l", group = "[L]aravel" },
 				{ "<leader>r", group = "[R]ename" },
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>w", group = "[W]orkspace" },
@@ -487,6 +496,7 @@ require("lazy").setup({
 			-- Enable Telescope extensions if they are installed
 			pcall(require("telescope").load_extension, "fzf")
 			pcall(require("telescope").load_extension, "ui-select")
+			pcall(require("telescope").load_extension, "git_branch")
 
 			-- See `:help telescope.builtin`
 			local builtin = require("telescope.builtin")
