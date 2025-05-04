@@ -274,6 +274,13 @@ require("lazy").setup({
 	"mbbill/undotree",
 
 	{
+		"windwp/nvim-ts-autotag",
+		event = "BufEnter", -- Or other events like "BufReadPost", "FileType"
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		opts = {}, -- Optional: Add plugin configuration here
+	},
+
+	{
 		"aca/emmet-ls",
 		lazy = false,
 		config = function()
