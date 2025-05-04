@@ -259,7 +259,12 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	"hrsh7th/nvim-cmp",
-	"hrsh7th/cmp-buffer",
+	{
+		"hrsh7th/cmp-buffer",
+		-- INFO was necessary to manually switch branch to specific commit in ~/.local/share/nvim/lazy/nvim-cmp
+		commit = "b356f2c",
+		pin = true,
+	},
 	"mbbill/undotree",
 
 	{
@@ -268,6 +273,12 @@ require("lazy").setup({
 		config = function()
 			require("lspconfig").emmet_ls.setup({})
 		end,
+	},
+
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = true, -- use opts = {} for passing setup options -- this is equivalent to setup({}) function },
 	},
 
 	{
@@ -923,6 +934,7 @@ require("lazy").setup({
 			--  into multiple repos for maintenance purposes.
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
 		},
 		config = function()
@@ -1001,6 +1013,7 @@ require("lazy").setup({
 					{ name = "luasnip" },
 					{ name = "path" },
 					{ name = "nvim_lsp_signature_help" },
+					{ name = "buffer" },
 				},
 			})
 		end,
