@@ -2,8 +2,9 @@
 -- Must installs:
 --    These can sometimes be installed directly via Mason - type ":Mason"
 --    NPM: LSPs for CSS (cssls) & PHP
---    Brew/apt: ripgrep 
+--    Brew/apt: ripgrep, libgit2 (for fugit2)
 --    Help command like `:help lspconfig-all` are very helpful for finding installation guides etc.
+--    Fonts install in system (mac): Jetbrains Mono Nerd
 --
 -- NPM PACKAGES
 --    /Users/erinmcgowan/.nvm/versions/node/v23.11.0/lib
@@ -105,7 +106,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -191,6 +192,13 @@ vim.keymap.set({ "n", "v" }, "<leader>gf", function()
 	require("git_branch").files()
 end)
 
+-- Both visual and normal mode for each, so you can open with a visual selection or without.
+vim.api.nvim_set_keymap("v", "<leader>Aa", ":GPTModelsCode<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>Aa", ":GPTModelsCode<CR>", { noremap = true })
+
+vim.api.nvim_set_keymap("v", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
+
 -- Open a new Terminal window below
 vim.keymap.set("n", "<Leader>T", ":below new term://bash<CR>", { noremap = true })
 
@@ -267,7 +275,7 @@ require("lazy").setup({
 	{
 		"hrsh7th/cmp-buffer",
 		-- INFO was necessary to manually switch branch to specific commit in ~/.local/share/nvim/lazy/nvim-cmp
-		commit = "b356f2c",
+		commit = "b356f2c80cb6c5bae2a65d7f9c82dd5c3fdd6038",
 		pin = true,
 	},
 	"mrloop/telescope-git-branch.nvim",
@@ -292,6 +300,35 @@ require("lazy").setup({
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true, -- use opts = {} for passing setup options -- this is equivalent to setup({}) function },
+	},
+
+	{
+		"Aaronik/GPTModels.nvim",
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+	},
+
+	{
+		"SuperBo/fugit2.nvim",
+		build = false,
+		opts = {
+			width = 100,
+		},
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"nvim-lua/plenary.nvim",
+			{
+				"chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+				dependencies = { "stevearc/dressing.nvim" },
+			},
+		},
+		cmd = { "Fugit2", "Fugit2Diff", "Fugit2Graph" },
+		keys = {
+			{ "<leader>F", mode = "n", "<cmd>Fugit2<cr>" },
+		},
 	},
 
 	{
@@ -412,12 +449,16 @@ require("lazy").setup({
 				{ "<leader>d", group = "[D]ocument" },
 				{ "<leader>g", group = "[G]it" },
 				{ "<leader>gf", group = "Git Search [F]ile Diffs (on current branch)" },
+				{ "<leader>F", group = "[F]ugit2" },
 				{ "<leader>l", group = "[L]aravel" },
 				{ "<leader>r", group = "[R]ename" },
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>w", group = "[W]orkspace" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader><F5>", group = "Undotree Toggle" },
+				{ "<leader>A", group = "LLM AI" },
+				{ "<leader>Aa", group = "GPT Models Code" },
+				{ "<leader>Ac", group = "GPT Models Chat" },
 				{ "<leader>T", group = "[T]erminal" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
 			},
