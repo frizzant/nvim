@@ -327,7 +327,7 @@ require("lazy").setup({
 		},
 		cmd = { "Fugit2", "Fugit2Diff", "Fugit2Graph" },
 		keys = {
-			{ "<leader>F", mode = "n", "<cmd>Fugit2<cr>" },
+			{ "<leader>gg", mode = "n", "<cmd>Fugit2<cr>" },
 		},
 	},
 
@@ -449,7 +449,7 @@ require("lazy").setup({
 				{ "<leader>d", group = "[D]ocument" },
 				{ "<leader>g", group = "[G]it" },
 				{ "<leader>gf", group = "Git Search [F]ile Diffs (on current branch)" },
-				{ "<leader>F", group = "[F]ugit2" },
+				{ "<leader>gg", group = "[F]ugit2" },
 				{ "<leader>l", group = "[L]aravel" },
 				{ "<leader>r", group = "[R]ename" },
 				{ "<leader>s", group = "[S]earch" },
