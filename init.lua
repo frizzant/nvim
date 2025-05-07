@@ -4,7 +4,7 @@
 --    NPM: LSPs for CSS (cssls) & PHP
 --    Brew/apt: ripgrep, libgit2 (for fugit2)
 --    Help command like `:help lspconfig-all` are very helpful for finding installation guides etc.
---    Fonts install in system (mac): Jetbrains Mono Nerd
+--    Fonts install in system (mac) and or your terminal: Jetbrains Mono, Jetbrains Mono Nerd
 --
 -- NPM PACKAGES
 --    /Users/erinmcgowan/.nvm/versions/node/v23.11.0/lib
