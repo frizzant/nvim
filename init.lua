@@ -302,10 +302,10 @@ require("lazy").setup({
 			local harpoon = require("harpoon")
 			harpoon:setup()
 
-			vim.keymap.set("n", "<leader>h", function()
+			vim.keymap.set("n", "<leader>ha", function()
 				harpoon:list():add()
 			end)
-			vim.keymap.set("n", "<C-e>", function()
+			vim.keymap.set("n", "<C-S-E>", function()
 				harpoon.ui:toggle_quick_menu(harpoon:list())
 			end)
 
@@ -329,6 +329,26 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-S-N>", function()
 				harpoon:list():next()
 			end)
+
+			-- Function to add the current file to a specified Harpoon slot
+			local function add_current_to_slot(slot)
+				harpoon:list():replace_at(slot, nil)
+				vim.notify(string.format("Added current file to Harpoon slot %d", slot), vim.log.levels.INFO)
+			end
+
+			-- Keybindings to dynamically add the current file to slots 1-4
+			vim.keymap.set("n", "<leader>hf", function()
+				add_current_to_slot(1)
+			end, { desc = "Harpoon: Add current to Slot 1" })
+			vim.keymap.set("n", "<leader>hv", function()
+				add_current_to_slot(2)
+			end, { desc = "Harpoon: Add current to Slot 2" })
+			vim.keymap.set("n", "<leader>hb", function()
+				add_current_to_slot(3)
+			end, { desc = "Harpoon: Add current to Slot 3" })
+			vim.keymap.set("n", "<leader>hh", function()
+				add_current_to_slot(4)
+			end, { desc = "Harpoon: Add current to Slot 4" })
 
 			-- basic telescope configuration
 			local conf = require("telescope.config").values
@@ -535,7 +555,13 @@ require("lazy").setup({
 				{ "<leader>Aa", group = "GPT Models Code" },
 				{ "<leader>Ac", group = "GPT Models Chat" },
 				{ "<leader>T", group = "[T]erminal" },
-				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				{ "<leader>h", group = "[h]arpoon2" },
+				{ "<leader>ha", group = "[a]dd to list" },
+				{ "<leader>hf", group = "Add to [f] key (slot1)" },
+				{ "<leader>hv", group = "Add to [v] key (slot2)" },
+				{ "<leader>hb", group = "Add to [b] key (slot3)" },
+				{ "<leader>hh", group = "Add to [h] key (slot4)" },
+				--{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
 			},
 		},
 	},
