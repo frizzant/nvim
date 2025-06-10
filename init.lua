@@ -282,19 +282,6 @@ require("lazy").setup({
 	"mbbill/undotree",
 
 	{
-		"sidebar-nvim/sidebar.nvim",
-		opts = {
-			open = false,
-			sections = { "datetime", "git", "diagnostics", "files" },
-			files = {
-				icon = "",
-				show_hidden = false,
-				ignored_paths = { "%.git$" },
-			},
-		},
-	},
-
-	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -374,6 +361,39 @@ require("lazy").setup({
 				toggle_telescope(harpoon:list())
 			end, { desc = "Open harpoon window" })
 		end,
+	},
+
+	{
+		"nvim-tree/nvim-tree.lua",
+		version = "*",
+		lazy = true,
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			local function my_on_attach(bufnr)
+				local api = require("nvim-tree.api")
+
+				local function opts(desc)
+					return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+				end
+
+				api.config.mappings.default_on_attach(bufnr)
+
+				-- vim.keymap.set("n", "<C-t>", api.tree.change_root_to_parent, opts("Up"))
+				vim.keymap.set("n", "?", api.tree.toggle_help, opts("Help"))
+				vim.keymap.set("n", "<C-q>", api.tree.close, opts("Close nvim-tree"))
+			end
+
+			require("nvim-tree").setup({
+				on_attach = my_on_attach,
+				disable_netrw = true,
+				hijack_netrw = true,
+			})
+		end,
+		keys = {
+			{ "<leader>tt", ":NvimTreeToggle<CR>", desc = "Nvim-Tree" },
+		},
 	},
 
 	{
