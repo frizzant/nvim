@@ -5,6 +5,7 @@
 --    Brew/apt: ripgrep, libgit2 (for fugit2)
 --    Help command like `:help lspconfig-all` are very helpful for finding installation guides etc.
 --    Fonts install in system (mac) and or your terminal: Jetbrains Mono, Jetbrains Mono Nerd
+--    laravel-ls IMPORTANT: install with go (path: "~/go/bin/laravel-ls") 
 --
 -- NPM PACKAGES
 --    /Users/erinmcgowan/.nvm/versions/node/v23.11.0/lib
@@ -199,9 +200,6 @@ vim.api.nvim_set_keymap("n", "<leader>Aa", ":GPTModelsCode<CR>", { noremap = tru
 vim.api.nvim_set_keymap("v", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
 
--- Open a new Terminal window below
-vim.keymap.set("n", "<Leader>T", ":below new term://bash<CR>", { noremap = true })
-
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -280,7 +278,36 @@ require("lazy").setup({
 	},
 	"mrloop/telescope-git-branch.nvim",
 	"mbbill/undotree",
-
+	{
+		"akinsho/toggleterm.nvim",
+		version = "*",
+		config = true,
+		keys = {
+			{ "<leader>Tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
+			{
+				"<leader>Th",
+				function()
+					require("toggleterm").toggle(nil, nil, nil, "horizontal")
+				end,
+				desc = "Toggle Horizontal Terminal",
+			},
+			{
+				"<leader>Tv",
+				function()
+					require("toggleterm").toggle(nil, nil, nil, "vertical")
+				end,
+				desc = "Toggle Vertical Terminal",
+			},
+		},
+		opts = {
+			direction = "float",
+			open_mapping = false,
+			shade_terminals = true,
+			start_in_insert = true,
+			insert_mappings = true,
+			terminal_mappings = true,
+		},
+	},
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
@@ -454,6 +481,7 @@ require("lazy").setup({
 			{ "<leader>ar", "<cmd>SessionSearch<CR>", desc = "Session search" },
 			{ "<leader>as", "<cmd>SessionSave<CR>", desc = "Save session" },
 			{ "<leader>aa", "<cmd>SessionToggleAutoSave<CR>", desc = "Toggle session" },
+			{ "<leader>ad", "<cmd>SessionDelete<CR>", desc = "Delete session" },
 		},
 		---enables autocomplete for opts
 		---@module "auto-session"
@@ -574,7 +602,7 @@ require("lazy").setup({
 				{ "<leader>A", group = "LLM AI" },
 				{ "<leader>Aa", group = "GPT Models Code" },
 				{ "<leader>Ac", group = "GPT Models Chat" },
-				{ "<leader>T", group = "[T]erminal" },
+				{ "<leader>T", group = "[T]oggleTerm (Terminal)" },
 				{ "<leader>h", group = "[h]arpoon2" },
 				{ "<leader>ha", group = "[a]dd to list" },
 				{ "<leader>hf", group = "Add to [f] key (slot1)" },
@@ -725,7 +753,10 @@ require("lazy").setup({
 			-- Automatically install LSPs and related tools to stdpath for Neovim
 			-- Mason must be loaded before its dependents so we need to set it up here.
 			-- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-			{ "williamboman/mason.nvim", opts = {} },
+			{
+				"williamboman/mason.nvim",
+				opts = {},
+			},
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
@@ -1033,6 +1064,10 @@ require("lazy").setup({
 						require("lspconfig")[server_name].setup(server)
 					end,
 				},
+			})
+
+			require("lspconfig").laravel_ls.setup({
+				cmd = { "/Users/erinmcgowan/go/bin/laravel-ls" },
 			})
 		end,
 	},
