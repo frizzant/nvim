@@ -126,14 +126,6 @@ vim.opt.mouse = "a"
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-	vim.opt.clipboard = "unnamedplus"
-end)
-
 -- Enable break indent
 vim.opt.breakindent = true
 
@@ -199,6 +191,10 @@ vim.api.nvim_set_keymap("n", "<leader>Aa", ":GPTModelsCode<CR>", { noremap = tru
 
 vim.api.nvim_set_keymap("v", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
+
+-- Copy & Paste System Clipboard
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Copy to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { desc = "Paste from system clipboard" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
