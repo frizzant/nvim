@@ -192,7 +192,7 @@ vim.api.nvim_set_keymap("n", "<leader>Aa", ":GPTModelsCode<CR>", { noremap = tru
 vim.api.nvim_set_keymap("v", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>Ac", ":GPTModelsChat<CR>", { noremap = true })
 
--- Copy & Paste System Clipboard
+-- Copy & Paste System/Internal
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "Copy to system clipboard" })
 vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { desc = "Paste from system clipboard" })
 
