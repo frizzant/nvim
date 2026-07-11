@@ -15,6 +15,7 @@
 ├── emmet-ls@0.4.2
 ├── npm@10.9.2
 └── vscode-langservers-extracted@4.10.0
+└── prettier @prettier/plugin-php
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -275,6 +276,24 @@ require("lazy").setup({
 	"mrloop/telescope-git-branch.nvim",
 	"mbbill/undotree",
 	{
+		"captbaritone/better-indent-support-for-php-with-html",
+		ft = "php",
+	},
+	{
+		"stevearc/conform.nvim",
+		event = { "BufWritePre" },
+		cmd = { "ConformInfo" },
+		opts = {
+			formatters_by_ft = {
+				php = { "prettier" },
+			},
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_fallback = true,
+			},
+		},
+	},
+	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = true,
@@ -427,12 +446,13 @@ require("lazy").setup({
 	},
 
 	{
-		"aca/emmet-ls",
-		lazy = false,
-		config = function()
-			require("lspconfig").emmet_ls.setup({})
-		end,
-	},
+        "aca/emmet-ls",
+        lazy = false,
+        config = function()
+           vim.lsp.config('emmet_ls', {})
+           vim.lsp.enable('emmet_ls')
+        end,
+    },
 
 	{
 		"windwp/nvim-autopairs",
@@ -1057,14 +1077,16 @@ require("lazy").setup({
 						-- by the server configuration above. Useful when disabling
 						-- certain features of an LSP (for example, turning off formatting for ts_ls)
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
+						vim.lsp.config(server_name, server)
+                        vim.lsp.enable(server_name)
 					end,
 				},
 			})
 
-			require("lspconfig").laravel_ls.setup({
-				cmd = { "/Users/erinmcgowan/go/bin/laravel-ls" },
-			})
+			vim.lsp.config('laravel_ls', {
+                cmd = { "/Users/erinmcgowan/go/bin/laravel-ls" },
+            })
+            vim.lsp.enable('laravel_ls')
 		end,
 	},
 
@@ -1300,17 +1322,26 @@ require("lazy").setup({
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
+		branch = 'master',
 		build = ":TSUpdate",
 		main = "nvim-treesitter.configs", -- Sets main module to use for opts
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 		opts = {
 			ensure_installed = {
 				"bash",
+				"blade",
 				"c",
 				"diff",
 				"html",
+				"javascript",
+				"json",
+				"json5",
 				"lua",
 				"luadoc",
+				"php",
+				"scss",
+				"sql",
+				"css",
 				"markdown",
 				"markdown_inline",
 				"query",
@@ -1369,6 +1400,7 @@ require("lazy").setup({
 			"nvim-telescope/telescope.nvim",
 			"MunifTanjim/nui.nvim",
 			"kevinhwang91/promise-async",
+			"nvim-neotest/nvim-nio",
 		},
 		cmd = { "Laravel" },
 		keys = {
