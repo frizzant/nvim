@@ -294,6 +294,18 @@ require("lazy").setup({
 		},
 	},
 	{
+        'MeanderingProgrammer/render-markdown.nvim',
+        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        opts = {
+            completions = { lsp = { enabled = true } },
+        },
+        keys = {
+            { '<leader>tm', '<cmd>RenderMarkdown toggle<cr>', desc = 'Toggle Markdown Rendering' },
+        },
+    },
+	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = true,
