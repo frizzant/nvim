@@ -506,10 +506,10 @@ require("lazy").setup({
 		lazy = false,
 		keys = {
 			-- Will use Telescope if installed or a vim.ui.select picker otherwise
-			{ "<leader>ar", "<cmd>SessionSearch<CR>", desc = "Session search" },
-			{ "<leader>as", "<cmd>SessionSave<CR>", desc = "Save session" },
-			{ "<leader>aa", "<cmd>SessionToggleAutoSave<CR>", desc = "Toggle session" },
-			{ "<leader>ad", "<cmd>SessionDelete<CR>", desc = "Delete session" },
+			{ "<leader>ar", "<cmd>AutoSession search<CR>", desc = "Session search" },
+			{ "<leader>as", "<cmd>AutoSession save<CR>", desc = "Save session" },
+			{ "<leader>aa", "<cmd>AutoSession toggle<CR>", desc = "Toggle auto-save" },
+			{ "<leader>ad", "<cmd>AutoSession delete<CR>", desc = "Delete session" },
 		},
 		---enables autocomplete for opts
 		---@module "auto-session"
