@@ -266,13 +266,13 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
-	"hrsh7th/nvim-cmp",
 	{
-		"hrsh7th/cmp-buffer",
+		"hrsh7th/nvim-cmp",
 		-- INFO was necessary to manually switch branch to specific commit in ~/.local/share/nvim/lazy/nvim-cmp
 		commit = "b356f2c80cb6c5bae2a65d7f9c82dd5c3fdd6038",
 		pin = true,
 	},
+	"hrsh7th/cmp-buffer",
 	"mrloop/telescope-git-branch.nvim",
 	"mbbill/undotree",
 	{
@@ -294,17 +294,17 @@ require("lazy").setup({
 		},
 	},
 	{
-        'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
-        ---@module 'render-markdown'
-        ---@type render.md.UserConfig
-        opts = {
-            completions = { lsp = { enabled = true } },
-        },
-        keys = {
-            { '<leader>tm', '<cmd>RenderMarkdown toggle<cr>', desc = 'Toggle Markdown Rendering' },
-        },
-    },
+		"MeanderingProgrammer/render-markdown.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+		---@module 'render-markdown'
+		---@type render.md.UserConfig
+		opts = {
+			completions = { lsp = { enabled = true } },
+		},
+		keys = {
+			{ "<leader>tm", "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle Markdown Rendering" },
+		},
+	},
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
@@ -458,13 +458,17 @@ require("lazy").setup({
 	},
 
 	{
-        "aca/emmet-ls",
-        lazy = false,
-        config = function()
-           vim.lsp.config('emmet_ls', {})
-           vim.lsp.enable('emmet_ls')
-        end,
-    },
+		"aca/emmet-ls",
+		lazy = true,
+		ft = { "html", "css", "scss", "javascriptreact", "typescriptreact", "blade", "php" },
+		config = function()
+			vim.lsp.config("emmet_ls", {
+				cmd = { "emmet-ls", "--stdio" },
+				filetypes = { "html", "css", "scss", "javascriptreact", "typescriptreact", "blade", "php" },
+			})
+			vim.lsp.enable("emmet_ls")
+		end,
+	},
 
 	{
 		"windwp/nvim-autopairs",
@@ -485,11 +489,13 @@ require("lazy").setup({
 		build = false,
 		opts = {
 			width = 100,
+			external_diffview = true,
 		},
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"nvim-tree/nvim-web-devicons",
 			"nvim-lua/plenary.nvim",
+			"sindrets/diffview.nvim",
 			{
 				"chrisgrieser/nvim-tinygit", -- optional: for Github PR view
 				dependencies = { "stevearc/dressing.nvim" },
@@ -498,6 +504,29 @@ require("lazy").setup({
 		cmd = { "Fugit2", "Fugit2Diff", "Fugit2Graph" },
 		keys = {
 			{ "<leader>gg", mode = "n", "<cmd>Fugit2<cr>" },
+		},
+	},
+
+	{
+		"sindrets/diffview.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+		keys = {
+			{ "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Open diff view" },
+			{ "<leader>gq", "<cmd>DiffviewClose<cr>", desc = "Close diff view" },
+			{ "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "Open file history" },
+			{ "<leader>gB", "<cmd>DiffviewOpen origin/HEAD...HEAD --imply-local<cr>", desc = "Review branch changes" },
+		},
+		opts = {
+			enhanced_diff_hl = true,
+			use_icons = true,
+			view = {
+				default = { layout = "diff2_horizontal" },
+				merge_tool = {
+					layout = "diff4_mixed",
+					disable_diagnostics = true,
+				},
+			},
 		},
 	},
 
@@ -515,8 +544,18 @@ require("lazy").setup({
 		---@module "auto-session"
 		---@type AutoSession.Config
 		opts = {
+			bypass_save_filetypes = { "NvimTree", "fugit2", "alpha", "dashboard", "snacks_dashboard" },
 			suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
 			-- log_level = 'debug',
+			post_restore_cmds = {
+				function()
+				-- Restore nvim-tree after a session is restored
+					local nvim_tree_api = require("nvim-tree.api")
+					nvim_tree_api.tree.open()
+					nvim_tree_api.tree.change_root(vim.fn.getcwd())
+					nvim_tree_api.tree.reload()
+				end,
+			},
 		},
 	},
 
@@ -827,6 +866,18 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 				callback = function(event)
+					local bufnr = event.buf
+					local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+					-- Check if the buffer is a virtual Git file from diffview or fugit
+					if bufname:match("^diffview://") or bufname:match("^fugit2://") then
+					-- Force the client to detach before it initializes and crashes
+						vim.schedule(function()
+							if vim.api.nvim_buf_is_valid(bufnr) then
+								vim.lsp.buf_detach_client(bufnr, event.data.client_id)
+							end
+						end)
+					end
 					-- NOTE: Remember that Lua is a real programming language, and as such it is possible
 					-- to define small helper and utility functions so you don't have to repeat yourself.
 					--
@@ -1017,9 +1068,7 @@ require("lazy").setup({
 					},
 				},
 				phpactor = {}, -- PHP LSP (PHP Actor)
-				eslint_d = {}, -- for javascript linting
 				ts_ls = {},
-				vls = {}, -- Vue Language Server
 				html = { -- HTML LSP
 					settings = {
 						html = {
@@ -1076,6 +1125,8 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"prettier",
+				"eslint_d",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -1090,15 +1141,24 @@ require("lazy").setup({
 						-- certain features of an LSP (for example, turning off formatting for ts_ls)
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 						vim.lsp.config(server_name, server)
-                        vim.lsp.enable(server_name)
+						vim.lsp.enable(server_name)
 					end,
 				},
 			})
 
-			vim.lsp.config('laravel_ls', {
-                cmd = { "/Users/erinmcgowan/go/bin/laravel-ls" },
-            })
-            vim.lsp.enable('laravel_ls')
+			vim.lsp.config("laravel_ls", {
+				cmd = { "/Users/erinmcgowan/go/bin/laravel-ls" },
+				filetypes = { "php", "blade" },
+				root_markers = { "artisan", "composer.json", ".git" },
+				root_dir = function(bufnr, on_dir)
+					local bufname = vim.api.nvim_buf_get_name(bufnr)
+					if vim.bo[bufnr].buftype ~= "" or bufname:match("^%a+://") then
+						return -- skip diffview://, fugitive://, and other virtual buffers
+					end
+					on_dir(vim.fs.root(bufnr, { "composer.json", ".git" }) or vim.fn.getcwd())
+				end,
+			})
+			vim.lsp.enable("laravel_ls")
 		end,
 	},
 
@@ -1334,7 +1394,7 @@ require("lazy").setup({
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
-		branch = 'master',
+		branch = "master",
 		build = ":TSUpdate",
 		main = "nvim-treesitter.configs", -- Sets main module to use for opts
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
